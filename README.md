@@ -7,4 +7,6 @@
 ```clojure
 (classname "a" 'b :c {:d true :x false} ["e" :f {'y nil "z" false :g []}])
 ;; => "a b c d e f g"
+(classname :a {:b true} {:b false})
+;; => "a"
 ```
