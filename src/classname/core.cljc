@@ -3,15 +3,16 @@
 
 (defn- parse-args [xs]
   (loop [res [], xs xs]
-    (let [x (first xs), next (next xs)]
+    (let [x (first xs), rest (rest xs)]
       (cond
-        (string?  x) (recur (conj res {x true}) next)
-        (keyword? x) (recur (conj res {x true}) next)
-        (symbol?  x) (recur (conj res {x true}) next)
-        (number?  x) (recur (conj res {(str x) true}) next)
-        (map?     x) (recur (conj res x) next)
-        (vector?  x) (recur (into res (parse-args x)) next)
-        :else (if (empty? next) res (recur res next))))))
+        (string?     x) (recur (conj res {x true}) rest)
+        (keyword?    x) (recur (conj res {x true}) rest)
+        (symbol?     x) (recur (conj res {x true}) rest)
+        (number?     x) (recur (conj res {(str x) true}) rest)
+        (map?        x) (recur (conj res x) rest)
+        (sequential? x) (recur (into res (parse-args x)) rest)
+        (set?        x) (recur (into res (parse-args (seq x))) rest)
+        :else (if (empty? rest) res (recur res rest))))))
 
 (defn classname [& xs]
   (->> xs
