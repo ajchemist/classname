@@ -10,7 +10,7 @@
         (keyword?    x) (recur (assoc res (name x) true) rest)
         (symbol?     x) (recur (assoc res (name x) true) rest)
         (number?     x) (recur (assoc res (str x)  true) rest)
-        (map?        x) (recur (merge res x) rest)
+        (map?        x) (recur (reduce #(assoc %1 (name (key %2)) (val %2)) res x) rest)
         (sequential? x) (recur (merge res (parse-args x)) rest)
         (set?        x) (recur (merge res (parse-args (seq x))) rest)
         :else (if (empty? rest) res (recur res rest))))))
